@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Twitter Sentiment Analysis</title>
+        <meta charset="utf-8">
+        <meta name=author content="Dumblekar, Nakul Kishore">
+        <meta name=description content="Analysis of twitter tweet sentiment for 2020 to understand change in human perception and experience of coronavirus disease 2019 (COVID-19) pandemic.">
+        <link rel="stylesheet" href="styles/style.css" type="text/css">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300&display=swap" rel="stylesheet">
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script type="text/javascript" id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script>
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$','$'], ['\\(','\\)']]
+                }
+            };
+        </script>
+    </head>
+
+    <body>
+        <h1 id="heading">Have we adapted to lifestyle changes brought on by COVID-19?</h1>
+        <p id="subheading">
+            <strong>Author:</strong> Dumblekar, Nakul Kishore (<a href="mailto:ndumblekar3@gatech.edu">ndumblekar3@gatech.edu</a>)
+            <br>
+            <strong>Year:</strong> 2020
+            <br>
+            <strong>Motivation:</strong> This analysis was intended to complete a course requirement for GaTech's ISyE 6740 in Fall 2020. Given the significance of the result, the analysis is being published to expand the scope of this direction of analysis.
+        </p>
+        
+        <hr>
+
+        <h2 id="problem-statement">Problem Statement:</h2>
+        <p id="problem-statement-body">
+            Coronavirus Disease 2019 (COVID-19) made headlines first in January 2020<a href=#references-body-1><sup>[1]</sup></a>, and continued to dominate conversation topics, news articles, and TV/online debates for the rest of 2020. As the virus evolved to debilitate the healthcare systems, most nations introduced country-wide lockdowns in Mar 2020 - Apr 2020<a href=#references-body-2><sup>[2]</sup></a>, which brought life for many to a standstill, and changed our personal lives by taking interactions online. It also had a significant change in our professional lives where most work-from-home capable jobs were pushed out of the office. As we approach the end of 2020, people have adapted to most of these changes, and this has become the new norm for many. The study aims to understand if this adaptation to new lifestyles, and professional lives can be identified in changing sentiments expressed on social media platforms between Feb 2020 - Nov 2020. Further, we intend to understand if any change detected is statistically significant by comparing the change in mean sentiment scores.
+        </p>
+
+        <h2 id="data-sources">Data Sources:</h2>
+        <p id="data-sources-body">
+            Data was sourced from a GitHub repository<a href=#references-body-3><sup>[3]</sup></a> containing tweet IDs sourced using specific keywords related to the pandemic. Data was specifically chosen for the months February, March, October, and November. The motivation for using this dataset is to calculate the mean sentiment score for 2020 Feb-Mar and compare with the mean sentiment score for 2020 Oct-Nov. The complete dataset consisted of 334,981 tweet IDs which were hydrated to obtain text and metadata for each tweet using the Hydrator<a href=#references-body-4><sup>[4]</sup></a> software. To hydrate tweets, a Twitter API developer key is required; this project was completed using a free student developer registration.
+        </p>
+
+        <h2 id="methodology">Methodology:</h2>
+        <p id="methodology-body">
+            <ol>
+                <li><span class="methodology-point">Data Preprocessing:</span> The analysis focused on ‘English’ language tweets, and aimed to use ‘hashtags’ and ‘tweet text’ as feature vectors. Therefore, 292,569 tweets were excluded due to a combination of non-English language, non-English hashtags, and blank hashtags. From the resulting 42,412 tweets, 3,000 samples were taken for each month (Feb, Mar, Oct, Nov).</li><br/>
+                <li><span class="methodology-point">Feature Extraction:</span> Tweets are casual statements and do not strictly adhere to grammar, spellings, and sentence construction, in general. However, within the words of each tweet, there are nouns, adjectives and verbs, which can provide an indication of the sentiment expressed by the tweet. The tweet texts were programmatically cleaned by removing punctuations, user mentions, URLs, word repetitions, stop-words, and symbols, resulting in only keywords which adequately summarize the intention of the tweet. The ‘hashtag’ in the tweet is a significant indicator of popularity, and sentiment of the tweet, so this was also included in the feature set.</li><br/>
+                <li><span class="methodology-point">Modeling:</span> Given the unsupervised learning requirement for the feature set, NLP methods of word tokenization and sentiment analysis using adjectives in each feature set. The approach taken was to estimate the sentiment score for each word of the feature set text, and assign the average sentiment scores across all words as the sample sentiment score.</li>    
+                
+            $$Y_{i, j} \in [-1.0, +1.0],$$
+            $$\forall i = 1, 2, 3, ..., n_j, \quad\text{and}, \quad \forall j = 1, 2, 3, ..., m$$
+            Where, $Y_{i, j} =$ average sentiment score of word $i$ in feature set $j$.
+                
+            $$\bar{Y_j} = \sum_{i=1}^{n_j} \frac{Y_{i, j}}{n_j}, \quad \forall j = 1, 2, 3, ..., m$$
+
+            The above steps were performed on the complete dataset to estimate baseline sentiment scores for 2020 Feb-Mar, and the comparative sentiment scores for 2020 Oct-Nov. The specific word sentiment values were estimated using the “Pattern” library for Python<a href=#references-body-5><sup>[5]</sup></a>, which is an open-source text mining module for Python containing a lexicon of adjectives (e.g., good, bad, amazing, irritating, ...) that occur frequently in product reviews, annotated with scores for sentiment polarity.
+            </ol>
+        </p>
+        
+        <h2 id="expected-result">Result:</h2>
+        <p id="expected-result-body">
+            <ol>
+                <li><span class="expected-result-point">Analysis of Freuqency:</span> The sentiment score for each sample was a real number between $[-1.0, +1.0]$. A threshold of $\pm 0.3$ to classify the sample with integer values as <em>Negative</em> (-1), <em>Neutral</em> (0), and <em>Positive</em> (+1).</li>
+                <br/>
+                <table id="result-table-1">
+                    <caption id="result-table-1-caption">Table 1: Sentiment Output</caption>
+                    <tr>
+                        <th>Sentiment</th>
+                        <th>Feb-Mar</th>
+                        <th>Oct-Nov</th>
+                    </tr>
+                    <tr>
+                        <td>-1 (Negative)</td>
+                        <td>277</td>
+                        <td>270</td>
+                    </tr>
+                    <tr>
+                        <td>0 (Neutral)</td>
+                        <td>4844</td>
+                        <td>4728</td>
+                    </tr>
+                    <tr>
+                        <td>+1 (Positive)</td>
+                        <td>879</td>
+                        <td>1002</td>
+                    </tr>
+                </table>
+                <br/>
+
+                Based on frequency of sentiment categories for the same sample size across both time periods, the <em>Positive</em> sentiment has 123 more entries and is 7 entries lower on <em>Negative</em> sentiment.
+                <br/><br/>
+                
+                <li><span class="expected-result-point">Analysis of Mean:</span> A frequency comparison is not conclusive to ascertain a potential change in sentiment. Therefore, the average sentiment scores for these timelines were also compared. The mean sentiment score for 2020 Feb-Mar is 0.075 and mean sentiment score for 2020 Oct-Nov is 0.085, which is small improvement.</li><br/>
+
+                <figure>
+                    <img id="expected-result-img" src="images/sentiment_average.png" alt="Average Sentiment Score">
+                    <figcaption id="expected-result-img-caption">Figure 1: Weekly Average Sentiment Score for Feb-Mar and Oct-Nov of 2020</figcaption>
+                </figure>
+
+                <li><span class="expected-result-point">Statistical Test of Means:</span> To validate if the improvement in mean sentiment scores from 2020 Oct-Nov can be statistically significant, a Two-Sample t-test was performed assuming unequal variances as the environment influencing the population response is significantly varied and immeasurable, though the tested population is same between the two timelines.</li>
+                <br/>
+                <table id="result-table-2">
+                    <caption id="result-table-2-caption">Table 2: t-Test: Two-Sample Assuming Unequal Variances @ $α = 0.05$</caption>
+                    <tr>
+                        <th>Statistic</th>
+                        <th>Oct-Nov</th>
+                        <th>Feb-Mar</th>
+                    </tr>
+                    <tr>
+                        <td>Mean</td>
+                        <td>0.0855</td>
+                        <td>0.0757</td>
+                    </tr>
+                    <tr>
+                        <td>Variance</td>
+                        <td>0.0003</td>
+                        <td>0.0002</td>
+                    </tr>
+                    <tr>
+                        <td>Observations</td>
+                        <td>6</td>
+                        <td>10</td>
+                    </tr>
+                    <tr>
+                        <td>Hypothesized Mean Difference</td>
+                        <td>0</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>df</td>
+                        <td>9</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>t Stat</td>
+                        <td>1.0582</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>P(T<=t) one-tail</td>
+                        <td>0.1587</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>t Critical one-tail</td>
+                        <td>1.8331</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>P(T<=t) two-tail</td>
+                        <td>0.3175</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>t Critical two-tail</td>
+                        <td>2.2621</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+                The null hypothesis ($H_0$) is that the difference in means is 0. The t-test shows that, at a significance level of 0.05, the test statistic is greater than the one-tail estimated probability. Therefore, we reject the null hypothesis and conclude that <strong>there is a significant difference in the mean sentiment scores between the two timelines</strong>.
+            </ol>
+            
+        </p>
+
+        <h2 id="conclusion">Conclusion & Future Scope:</h2>
+        <p id="conclusion-body">
+            In conclusion, the analysis shows a statistically significant shift in the mean sentiment scores between the onset of the pandemic and present day. This implies that <strong>there is some level of adaptation or comfort expressed in the sentiment of people today compared to the onset of COVID-19</strong>. While the scope of this project was limited, the sentiment estimation accuracy can be improved by using better datasets, refinement of the preprocessing pipelines, and leveraging better sentiment modeling techniques like n-grams, modality, subjectivity, etc. Further, this path of analysis can be a catalyst to investigate the causes of sentiment change, research the sustainability and long-term impact on social life, etc.
+        </p>
+
+        <hr>
+
+        <h2 id="references">References</h2>
+        <p id="references-body">
+            <ol>
+                <li id="references-body-1"><a href="https://en.wikipedia.org/wiki/Coronavirus_disease_2019#History">Wikipedia COVID-19 History</a></li>
+                <li id="references-body-2"><a href="https://en.wikipedia.org/wiki/COVID-19_pandemic_lockdowns">Wikipedia COVID-19 Pandemic Lockdowns</a></li>
+                <li id="references-body-3">L. K. F. E. Chen E, "Tracking Social Media Discourse About the COVID-19 Pandemic: Development of a Public Coronavirus Twitter Data Set JMIR Public Health Surveillance 2020;6(2):e19273 DOI: 10.2196/19273 PMID: 32427106," [Online]. Available: https://github.com/echen102/COVID-19-TweetIDs</li>
+                <li id="references-body-4">"Documenting the Now. (2020). Hydrator [Computer Software].," Retrieved from https://github.com/docnow/hydrator, 2020.</li>
+                <li id="references-body-5">T. D. W. De Smedt, "Pattern for Python," Journal of Machine Learning Research, 13, 2031–2035, 2012.</li>
+            </ol>
+        </p>
+    </body>
+</html>

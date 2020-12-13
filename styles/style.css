@@ -1,0 +1,55 @@
+html {
+    margin: 0.5in;
+    background-color: ghostwhite;
+}
+
+body {
+    font-family: 'Merriweather', serif;
+    text-align: justify;
+}
+
+table {  
+    border-collapse: collapse;
+    border: 2px solid rgb(200,200,200);
+    letter-spacing: 1px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+th {
+    padding: 10px 20px;
+    border-bottom: 1px solid rgb(190,190,190);
+}
+
+td {
+    border: 1px solid rgb(190,190,190);
+    padding: 10px 20px;
+    background-color: gainsboro;
+}
+
+caption {
+    padding: 10px;
+    font-size: smaller;
+    font-weight: bold;
+}
+
+#expected-result-img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#expected-result-img-caption {
+    text-align: center;
+    font-size: smaller;
+    font-weight: bold;
+}
+
+.methodology-point {
+    font-style: italic;
+}
+
+.expected-result-point {
+    font-style: italic;
+}
